@@ -1,0 +1,64 @@
+<main class="flex flex-col items-center h-screen md:overflow-hidden">
+  <div class="absolute inset-0 m-4 rounded-2xl bg-authBG bg-no-repeat bg-[position:top_center] bg-cover h-[60%] md:m-6 md:h-[40%] xl:bg-contain xl:h-[70%]"></div>
+
+  <div class="relative z-10 w-full mt-10 2xl:mt-14">
+    <header class="flex justify-center items-center rounded-xl w-max px-8 py-2 mx-auto bg-white/20 md:px-10 md:py-3">
+      <nav class="flex items-center justify-center gap-4 uppercase text-white font-bold tracking-wide md:gap-8 lg:gap-4">
+        <a  routerLink="/create-password"
+            routerLinkActive="active-page" 
+            class="flex flex-col items-center rounded-xl outline-none sm:focus:outline-2 sm:focus:outline-white duration-300 ease-in md:flex-row md:gap-1 lg:px-3"
+        >
+          <i class="ph-fill ph-user-circle-check text-lg"></i>
+          <span class="hover:underline text-xs">primeiro acesso</span>
+        </a>
+        <a 
+          routerLink="/login"
+          routerLinkActive="active-page" 
+          class="flex flex-col items-center rounded-xl outline-none sm:focus:outline-2 sm:focus:outline-white duration-300 ease-in md:flex-row md:gap-1 lg:px-3"
+        >
+          <i class="ph-fill ph-key text-lg"></i>
+          <span class="hover:underline text-xs">login</span>
+        </a>
+        @if (storageService.getToken()) {
+          <a 
+            routerLink="/dashboard"
+            routerLinkActive="active-page"  
+            class="flex flex-col items-center rounded-xl outline-none sm:focus:outline-2 sm:focus:outline-white duration-300 ease-in md:flex-row md:gap-1 lg:px-3"
+          >
+            <i class="ph-fill ph-cube text-lg"></i>
+            <span class="hover:underline text-xs">dashboard</span>
+          </a>
+        }
+      </nav>
+    </header>
+
+    <section class="flex flex-col items-center w-full h-full px-8 mt-6 mx-auto md:mt-10">
+      <div class="text-center mb-8 lg:mb-10">
+        <h1 class="text-3xl text-white font-bold" [innerHTML]="titlePage"></h1>
+        <h2 class="text-base text-white mt-2 mx-auto w-[90%] sm:w-full">{{ subTitlePage }}</h2>
+      </div>
+
+      <div class="flex flex-col items-center justify-center w-full h-auto rounded-2xl py-8 px-5 bg-white shadow-[8px_8px_24px_rgba(0,0,0,0.1)] md:px-8 md:pt-12 md:w-[60%] lg:w-[40%] xl:w-[30%] 2xl:pb-12 2xl:w-[25%]">
+        <img src="assets/svg/logo.svg" alt="logo da página" class="w-[60%] md:w-[50%]"/>
+        <h3 class="text-2xl text-secondary font-bold uppercase mt-8 mb-4">{{ pageTitle }}</h3>
+        <ng-content></ng-content>
+        <div class="flex flex-col items-center justify-center gap-4 w-full">
+          <button
+            type="button"
+            class="w-full py-3 px-6 rounded-lg text-base font-medium bg-primary text-white shadow-[0_8px_12px_rgba(148,64,255,0.2)] outline-none focus:outline-2 focus:outline-secondary focus:bg-secondary hover:bg-secondary duration-300 ease-in-out"
+            (click)="submit()"
+          >
+            {{ primaryBtnText }}
+          </button>
+          <a
+            routerLink="/{{secondaryBtnRoute}}"
+            routerLinkActive="active-page" 
+            class="text-sm rounded-xl text-secondary hover:text-primary outline-none focus:text-primary focus:underline hover:underline duration-300 ease-in md:flex-row md:gap-1 lg:px-3"
+          >
+            {{ secondaryBtnText }}
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>

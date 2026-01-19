@@ -1,0 +1,36 @@
+<app-default-auth-layout
+  titlePage="Bem-vindo(a) <br class='block sm:hidden'> de volta!"
+  subTitlePage="Insira o endereço de email e senha para entrar em sua conta KelvinBoard"
+  pageTitle="Login"
+  primaryBtnText="Login"
+  secondaryBtnText="É seu primeiro acesso? Crie uma senha."
+  secondaryBtnRoute="create-password"
+  (submit)="submit()"
+  (navigate)="navigate()"
+>
+  <form [formGroup]="loginForm" class="flex flex-col w-full mb-8">
+    <div class="flex flex-col gap-4">
+      <app-base-input
+        formControlName="email"
+        label="Email"
+        type="email"
+        placeholder="Seu endereço de email"
+      >
+        <i class="ph ph-envelope-simple"></i>
+      </app-base-input>
+      
+  
+      <app-base-input
+        formControlName="password"
+        label="Senha"
+        type="password"
+        placeholder="Sua senha"
+      >
+        <i class="ph ph-password"></i>
+      </app-base-input>
+    </div>
+    <a href="#" class="w-max ml-auto mt-3 text-sm text-secondary hover:text-primary hover:underline outline-none focus:text-primary focus:underline duration-300 ease-in-out">
+      Forgot Password?
+    </a>
+  </form>
+</app-default-auth-layout>

@@ -1,0 +1,17 @@
+<div>
+  <label class="text-gray-700 text-sm">
+    {{ label }}
+    <div class="relative mt-1">
+      <input
+        [type]="type"
+        [placeholder]="placeholder"
+        [value]="value"
+        (input)="onInput($event)"
+        class="w-full py-[14px] pl-9 pr-2 rounded-[15px] border outline-none hover:outline-2 hover:outline-secondary focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+      />
+      <div class="absolute top-0 left-0 pl-3 pt-[13px] text-xl text-secondary">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </label>
+</div>
