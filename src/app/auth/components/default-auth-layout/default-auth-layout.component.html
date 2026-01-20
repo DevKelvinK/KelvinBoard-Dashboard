@@ -4,13 +4,6 @@
   <div class="relative z-10 w-full mt-10 2xl:mt-14">
     <header class="flex justify-center items-center rounded-xl w-max px-8 py-2 mx-auto bg-white/20 md:px-10 md:py-3">
       <nav class="flex items-center justify-center gap-4 uppercase text-white font-bold tracking-wide md:gap-8 lg:gap-4">
-        <a  routerLink="/create-password"
-            routerLinkActive="active-page" 
-            class="flex flex-col items-center rounded-xl outline-none sm:focus:outline-2 sm:focus:outline-white duration-300 ease-in md:flex-row md:gap-1 lg:px-3"
-        >
-          <i class="ph-fill ph-user-circle-check text-lg"></i>
-          <span class="hover:underline text-xs">primeiro acesso</span>
-        </a>
         <a 
           routerLink="/login"
           routerLinkActive="active-page" 
@@ -19,16 +12,13 @@
           <i class="ph-fill ph-key text-lg"></i>
           <span class="hover:underline text-xs">login</span>
         </a>
-        @if (storageService.getToken()) {
-          <a 
-            routerLink="/dashboard"
-            routerLinkActive="active-page"  
+        <a  routerLink="/create-password"
+            routerLinkActive="active-page" 
             class="flex flex-col items-center rounded-xl outline-none sm:focus:outline-2 sm:focus:outline-white duration-300 ease-in md:flex-row md:gap-1 lg:px-3"
-          >
-            <i class="ph-fill ph-cube text-lg"></i>
-            <span class="hover:underline text-xs">dashboard</span>
-          </a>
-        }
+        >
+          <i class="ph-fill ph-user-circle-check text-lg"></i>
+          <span class="hover:underline text-xs">primeiro acesso</span>
+        </a>
       </nav>
     </header>
 
@@ -42,22 +32,6 @@
         <img src="assets/svg/logo.svg" alt="logo da página" class="w-[60%] md:w-[50%]"/>
         <h3 class="text-2xl text-secondary font-bold uppercase mt-8 mb-4">{{ pageTitle }}</h3>
         <ng-content></ng-content>
-        <div class="flex flex-col items-center justify-center gap-4 w-full">
-          <button
-            type="button"
-            class="w-full py-3 px-6 rounded-lg text-base font-medium bg-primary text-white shadow-[0_8px_12px_rgba(148,64,255,0.2)] outline-none focus:outline-2 focus:outline-secondary focus:bg-secondary hover:bg-secondary duration-300 ease-in-out"
-            (click)="submit()"
-          >
-            {{ primaryBtnText }}
-          </button>
-          <a
-            routerLink="/{{secondaryBtnRoute}}"
-            routerLinkActive="active-page" 
-            class="text-sm rounded-xl text-secondary hover:text-primary outline-none focus:text-primary focus:underline hover:underline duration-300 ease-in md:flex-row md:gap-1 lg:px-3"
-          >
-            {{ secondaryBtnText }}
-          </a>
-        </div>
       </div>
     </section>
   </div>

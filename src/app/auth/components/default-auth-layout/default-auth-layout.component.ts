@@ -18,18 +18,4 @@ export class DefaultAuthLayoutComponent {
   @Input() titlePage: string = '';
   @Input() subTitlePage: string = '';
   @Input() pageTitle: string = '';
-  @Input() primaryBtnText: string = '';
-  @Input() secondaryBtnText: string = '';
-  @Input() secondaryBtnRoute: string = '';
-
-  @Output('submit') onSubmit = new EventEmitter<void>();
-  @Output('navigate') onNavigate = new EventEmitter<void>();
-
-  submit() {
-    this.onSubmit.emit();
-  }
-
-  navigate() {
-    this.onNavigate.emit();
-  }
 }

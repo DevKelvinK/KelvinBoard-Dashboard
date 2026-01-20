@@ -14,4 +14,28 @@
       </div>
     </div>
   </label>
+
+  <ng-content select="[card-passwordStrengthIndicator]"></ng-content>
+
+  <div class="flex gap-2 text-red-400 text-sm mt-2 ml-2">
+    @if (control && control.invalid && (control.dirty || control.touched)) {
+      @if (control.errors?.['required']) {
+        <span>* Campo obrigatório</span>
+      }
+  
+      @if (control.errors?.['email']) {
+        <span>* Email inválido</span>
+      }
+  
+      @if (control.errors?.['minlength']) {
+        <span>
+          * Senha deve ter mínimo de {{ control.errors?.['minlength'].requiredLength }} caracteres
+        </span>
+      }
+    }
+
+    @if (form && form.errors?.['passwordMismatch'] && !control?.errors?.['required'] && (form.dirty || form.touched)) {
+        <span>* As senhas não coincidem</span>
+    }
+  </div>
 </div>

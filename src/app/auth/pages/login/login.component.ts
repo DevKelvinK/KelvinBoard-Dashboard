@@ -27,6 +27,15 @@ export class LoginComponent {
     })
   }
 
+  // Getters para acessar os FormControls do form (email e senha)
+  get emailControl(): FormControl {
+    return this.loginForm.get('email') as FormControl;
+  }
+
+  get passwordControl(): FormControl {
+    return this.loginForm.get('password') as FormControl;
+  }
+
   submit() {
     if (this.loginForm.invalid) return;
 
@@ -40,9 +49,5 @@ export class LoginComponent {
       },
       error: (err) => console.error(err.message)
     })
-  }
-
-  navigate() {
-    this.router.navigate(["register"])
   }
 }

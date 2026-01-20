@@ -1,5 +1,12 @@
-import { Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { Component, forwardRef, Input, Optional, Self } from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  NgControl,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 type InputTypes = 'text' | 'email' | 'password';
 
@@ -21,6 +28,8 @@ export class BaseInputComponent implements ControlValueAccessor {
   @Input() type: InputTypes = 'text';
   @Input() placeholder: string = '';
   @Input() label: string = '';
+  @Input() form?: FormGroup | null;
+  @Input() control?: FormControl | null;
 
   value: string = '';
   onChange: any = () => {};

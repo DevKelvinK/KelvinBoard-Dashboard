@@ -13,16 +13,16 @@ export class AuthService {
     private storageService: StorageService
   ) {}
 
-  createPassword(email: string, code: string, newPassword: string) {
-    return this.apiMockService.createPassword(email, code, newPassword);
-  }
-
   login(email: string, password: string) {
     return this.apiMockService.login(email, password).pipe(
       tap((res) => {
         this.storageService.setToken(res.token);
       }),
     );
+  }
+
+  createPassword(email: string, code: string, newPassword: string) {
+    return this.apiMockService.createPassword(email, code, newPassword);
   }
 
   logout() {

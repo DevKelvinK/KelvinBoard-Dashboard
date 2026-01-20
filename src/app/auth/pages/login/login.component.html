@@ -2,15 +2,11 @@
   titlePage="Bem-vindo(a) <br class='block sm:hidden'> de volta!"
   subTitlePage="Insira o endereço de email e senha para entrar em sua conta KelvinBoard"
   pageTitle="Login"
-  primaryBtnText="Login"
-  secondaryBtnText="É seu primeiro acesso? Crie uma senha."
-  secondaryBtnRoute="create-password"
-  (submit)="submit()"
-  (navigate)="navigate()"
 >
-  <form [formGroup]="loginForm" class="flex flex-col w-full mb-8">
+  <form [formGroup]="loginForm" class="flex flex-col w-full">
     <div class="flex flex-col gap-4">
       <app-base-input
+        [control]="emailControl"
         formControlName="email"
         label="Email"
         type="email"
@@ -18,9 +14,9 @@
       >
         <i class="ph ph-envelope-simple"></i>
       </app-base-input>
-      
-  
+
       <app-base-input
+        [control]="passwordControl"
         formControlName="password"
         label="Senha"
         type="password"
@@ -29,8 +25,27 @@
         <i class="ph ph-password"></i>
       </app-base-input>
     </div>
-    <a href="#" class="w-max ml-auto mt-3 text-sm text-secondary hover:text-primary hover:underline outline-none focus:text-primary focus:underline duration-300 ease-in-out">
-      Forgot Password?
+    <a
+      href="#"
+      class="w-max ml-auto mt-1 text-sm text-secondary hover:text-primary hover:underline outline-none focus:text-primary focus:underline duration-300 ease-in-out"
+    >
+      Esqueceu a senha?
     </a>
+    <div class="flex flex-col items-center justify-center gap-4 w-full mt-8">
+      <button
+        type="submit"
+        class="w-full py-3 px-6 rounded-lg text-base font-medium bg-primary text-white shadow-[0_8px_12px_rgba(148,64,255,0.2)] outline-none focus:outline-2 focus:outline-secondary focus:bg-secondary hover:bg-secondary duration-300 ease-in-out"
+        (click)="submit()"
+      >
+        Login
+      </button>
+      <a
+        routerLink="/create-password"
+        routerLinkActive="active-page"
+        class="text-sm rounded-xl text-secondary hover:text-primary outline-none focus:text-primary focus:underline hover:underline duration-300 ease-in md:flex-row md:gap-1 lg:px-3"
+      >
+        É seu primeiro acesso? Crie uma senha.
+      </a>
+    </div>
   </form>
 </app-default-auth-layout>
