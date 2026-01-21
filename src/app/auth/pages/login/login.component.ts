@@ -16,6 +16,8 @@ interface LoginForm {
 })
 export class LoginComponent {
   loginForm: FormGroup<LoginForm>;
+  errorButton = false;
+   clicked = false;
 
   constructor(
     private router: Router,
@@ -25,6 +27,15 @@ export class LoginComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)])
     })
+  }
+
+  // Atualização dinâmica da cor do botão conforme validação dos formulários
+  ngOnInit() {
+    this.loginForm.statusChanges.subscribe(() => {
+      if (this.clicked) {
+        this.errorButton = this.loginForm.invalid;
+      }
+    });
   }
 
   // Getters para acessar os FormControls do form (email e senha)
@@ -37,7 +48,13 @@ export class LoginComponent {
   }
 
   submit() {
-    if (this.loginForm.invalid) return;
+    this.clicked = true;
+
+    if (this.loginForm.invalid) {
+      this.errorButton = true;
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
     this.AuthService.login(
       this.loginForm.value.email,

@@ -26,24 +26,31 @@ type PasswordStrength = 'weak' | 'medium' | 'strong' | 'veryStrong';
 export class CreatePasswordComponent {
   createPasswordForm: FormGroup<CreatePasswordForm>;
   passwordStrengthLevel: PasswordStrength = 'weak';
+  errorButton = false;
+  clicked = false;
 
   constructor(
     private router: Router,
-    private AuthService: AuthService
+    private AuthService: AuthService,
   ) {
     this.createPasswordForm = new FormGroup(
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         code: new FormControl('', [Validators.required]),
-        newPassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
-        newPasswordConfirm: new FormControl('', [Validators.required])
+        newPassword: new FormControl('', [
+          Validators.required,
+          Validators.minLength(8),
+        ]),
+        newPasswordConfirm: new FormControl('', [Validators.required]),
       },
-      { validators: this.passwordConfirmationValidation }
-    )
+      { validators: this.passwordConfirmationValidation },
+    );
 
-    this.createPasswordForm.get('newPassword')?.valueChanges.subscribe(
-      value => {this.passwordStrengthLevel = this.passwordStrength(value)}
-    )
+    this.createPasswordForm
+      .get('newPassword')
+      ?.valueChanges.subscribe((value) => {
+        this.passwordStrengthLevel = this.passwordStrength(value);
+      });
   }
 
   // Adiciona erro "passwordMismatch" caso senha e confirmação de senha não coincidirem
@@ -56,6 +63,15 @@ export class CreatePasswordComponent {
     }
 
     return null;
+  }
+
+  // Atualização dinâmica da cor do botão conforme validação dos formulários
+  ngOnInit() {
+    this.createPasswordForm.statusChanges.subscribe(() => {
+      if (this.clicked) {
+        this.errorButton = this.createPasswordForm.invalid;
+      }
+    });
   }
 
   // Getters para acessar os FormControls do form (email, código, senha e confirmação de senha)
@@ -77,18 +93,18 @@ export class CreatePasswordComponent {
 
   // Função para indicador de força de senha
   passwordStrength(password: string): PasswordStrength {
-    let strength = 0
+    let strength = 0;
 
     if (!password) {
       return 'weak';
     }
-    
+
     // Se estiver com mínimo de 8 caracteres
-    if (password.length >= 8) strength++; 
+    if (password.length >= 8) strength++;
     // Se tiver letra maiúscula
-    if (/[A-Z]/.test(password)) strength++; 
+    if (/[A-Z]/.test(password)) strength++;
     // Se tiver número
-    if (/[0-9]/.test(password)) strength++; 
+    if (/[0-9]/.test(password)) strength++;
     // Se tiver algum caractere especial
     if (/[^A-Za-z0-9]/.test(password)) strength++;
 
@@ -108,9 +124,19 @@ export class CreatePasswordComponent {
   }
 
   submit() {
-    if (this.createPasswordForm.invalid) return;
+    this.clicked = true;
 
-    if (this.createPasswordForm.value.newPassword !== this.createPasswordForm.value.newPasswordConfirm) {
+    if (this.createPasswordForm.invalid) {
+      this.errorButton = true;
+      this.createPasswordForm.markAllAsTouched();
+      return;
+    }
+
+    if (
+      this.createPasswordForm.value.newPassword !==
+      this.createPasswordForm.value.newPasswordConfirm
+    ) {
+      this.errorButton = true;
       return this.createPasswordForm.setErrors({ passwordMismatch: true });
     }
 

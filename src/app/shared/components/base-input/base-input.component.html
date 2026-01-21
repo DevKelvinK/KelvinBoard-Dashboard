@@ -7,6 +7,8 @@
         [placeholder]="placeholder"
         [value]="value"
         (input)="onInput($event)"
+        (blur)="onTouched()"
+        [readonly]="readonly"
         class="w-full py-[14px] pl-9 pr-2 rounded-[15px] border outline-none hover:outline-2 hover:outline-secondary focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
       />
       <div class="absolute top-0 left-0 pl-3 pt-[13px] text-xl text-secondary">
@@ -15,10 +17,10 @@
     </div>
   </label>
 
-  <ng-content select="[card-passwordStrengthIndicator]"></ng-content>
+  <ng-content select="[card-2]"></ng-content>
 
-  <div class="flex gap-2 text-red-400 text-sm mt-2 ml-2">
-    @if (control && control.invalid && (control.dirty || control.touched)) {
+  <div class="flex gap-2 text-red-400 text-xs mt-2 ml-2">
+    @if (control && control.invalid && control.touched) {
       @if (control.errors?.['required']) {
         <span>* Campo obrigatório</span>
       }
@@ -32,9 +34,13 @@
           * Senha deve ter mínimo de {{ control.errors?.['minlength'].requiredLength }} caracteres
         </span>
       }
+
+      @if (control.errors?.['notFound']) {
+        <span>* Email não encontrado</span>
+      }
     }
 
-    @if (form && form.errors?.['passwordMismatch'] && !control?.errors?.['required'] && (form.dirty || form.touched)) {
+    @if (form && form.errors?.['passwordMismatch'] && !control?.errors?.['required'] && control?.touched) {
         <span>* As senhas não coincidem</span>
     }
   </div>

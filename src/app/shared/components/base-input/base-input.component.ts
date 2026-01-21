@@ -30,10 +30,11 @@ export class BaseInputComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() form?: FormGroup | null;
   @Input() control?: FormControl | null;
+  @Input() readonly: boolean = false;
 
   value: string = '';
-  onChange: any = () => {};
-  onTouched: any = () => {};
+  onChange: (value: any) => void = () => {};
+  onTouched: () => void = () => {};
 
   onInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
@@ -44,11 +45,11 @@ export class BaseInputComponent implements ControlValueAccessor {
     this.value = value;
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: () => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 

@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { LoginComponent } from './pages/login/login.component';
 import { CreatePasswordComponent } from './pages/create-password/create-password.component';
+import { PasswordRecoveryComponent } from './pages/password-recovery/password-recovery.component';
 import { DefaultAuthLayoutComponent } from './components/default-auth-layout/default-auth-layout.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from '../shared/shared.module';
@@ -20,7 +21,8 @@ import { SharedModule } from '../shared/shared.module';
   ],
   declarations: [
     LoginComponent,
-    CreatePasswordComponent
+    CreatePasswordComponent,
+    PasswordRecoveryComponent
   ]
 })
 export class AuthModule { }

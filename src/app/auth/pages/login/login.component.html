@@ -1,7 +1,7 @@
 <app-default-auth-layout
-  titlePage="Bem-vindo(a) <br class='block sm:hidden'> de volta!"
-  subTitlePage="Insira o endereço de email e senha para entrar em sua conta KelvinBoard"
-  pageTitle="Login"
+  pageTitle="Bem-vindo(a) <br class='block sm:hidden'> de volta!"
+  pageSubTitle="Insira o endereço de email e senha para entrar em sua conta KelvinBoard"
+  formTitle="Login"
 >
   <form [formGroup]="loginForm" class="flex flex-col w-full">
     <div class="flex flex-col gap-4">
@@ -26,7 +26,7 @@
       </app-base-input>
     </div>
     <a
-      href="#"
+      routerLink="/password-recovery"
       class="w-max ml-auto mt-1 text-sm text-secondary hover:text-primary hover:underline outline-none focus:text-primary focus:underline duration-300 ease-in-out"
     >
       Esqueceu a senha?
@@ -35,6 +35,9 @@
       <button
         type="submit"
         class="w-full py-3 px-6 rounded-lg text-base font-medium bg-primary text-white shadow-[0_8px_12px_rgba(148,64,255,0.2)] outline-none focus:outline-2 focus:outline-secondary focus:bg-secondary hover:bg-secondary duration-300 ease-in-out"
+        [ngClass]="{
+          'bg-red-500 hover:bg-red-600 focus:outline-red-600 focus:bg-red-600': errorButton
+        }"
         (click)="submit()"
       >
         Login

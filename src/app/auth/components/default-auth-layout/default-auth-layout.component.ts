@@ -15,7 +15,7 @@ export class DefaultAuthLayoutComponent {
     public storageService: StorageService
   ) {}
 
-  @Input() titlePage: string = '';
-  @Input() subTitlePage: string = '';
   @Input() pageTitle: string = '';
+  @Input() pageSubTitle: string = '';
+  @Input() formTitle: string = '';
 }

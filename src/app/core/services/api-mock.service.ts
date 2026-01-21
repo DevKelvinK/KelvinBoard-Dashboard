@@ -14,8 +14,16 @@ export class ApiMockService {
 
   private users: User[] = [
     {
-      email: 'teste@email.com',
+      email: 'primeiroacesso@email.com',
       password: null,
+    },
+    {
+      email: 'tenhosenha@email.com',
+      password: 'tenhoSenh@123',
+    },
+    {
+      email: 'esquecisenha@email.com',
+      password: 'esqueciSenh@123',
     },
   ];
   
@@ -23,7 +31,7 @@ export class ApiMockService {
     const userFound = this.users.find((user) => user.email === email);
 
     if (!userFound) {
-      return throwError(() => new Error('Usuário não encontrado.')).pipe(delay(800));
+      return throwError(() => new Error('Email não encontrado.')).pipe(delay(800));
     }
 
     if (!userFound.password) {
@@ -38,11 +46,6 @@ export class ApiMockService {
     return of({token: 'mock-token-123'}).pipe(delay(800));
   }
 
-  
-  // requestPasswordReset(email: string): Observable<PasswordResetResponse> {
-
-  // }
-
   createPassword(email: string, code: string, newPassword: string): Observable<void> {
     if (code !== '123456') {
       return throwError(() => new Error('Código informado inválido!')).pipe(delay(800))
@@ -51,13 +54,39 @@ export class ApiMockService {
     const userFound = this.users.find((user) => user.email === email);
 
     if (!userFound) {
-      return throwError(() => new Error('Usuário não encontrado.')).pipe(delay(800));
+      return throwError(() => new Error('Usuário não encontrado, digite um email cadastrado.')).pipe(delay(800));
     }
 
     if (userFound.password) {
       return throwError(() => new Error('Esse email já possui uma senha.')).pipe(delay(800));
     }
 
+    userFound.password = newPassword;
+
+    return of(void 0).pipe(delay(800));
+  }
+
+  requestPasswordReset(email: string): Observable<PasswordResetResponse> {
+    const userFound = this.users.find((user) => user.email === email);
+    
+    if (!userFound) {
+      return throwError(() => new Error('Usuário não encontrado, digite um email cadastrado.')).pipe(delay(800));
+    }
+
+    return of({ resetId: '123456' }).pipe(delay(800));
+  }
+
+  confirmPasswordReset(email: string, code: string, newPassword: string): Observable<void> {
+    if (code !== '123456') {
+      return throwError(() => new Error('Código informado inválido!')).pipe(delay(800))
+    }
+
+    const userFound = this.users.find((user) => user.email === email);
+
+    if (!userFound) {
+      return throwError(() => new Error('Usuário não encontrado, digite um email cadastrado.')).pipe(delay(800));
+    }
+    
     userFound.password = newPassword;
 
     return of(void 0).pipe(delay(800));

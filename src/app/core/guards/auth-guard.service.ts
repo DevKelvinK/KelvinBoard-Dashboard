@@ -19,7 +19,6 @@ export class AuthGuardService implements CanMatch {
       return true;
     }
 
-    console.log('Sem o token, num vai entrar nao parceiro!')
     return this.router.createUrlTree(['/login']);
   }
 }

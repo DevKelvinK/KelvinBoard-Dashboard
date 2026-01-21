@@ -17,12 +17,21 @@ export class AuthService {
     return this.apiMockService.login(email, password).pipe(
       tap((res) => {
         this.storageService.setToken(res.token);
+        this.storageService.setUserEmail(email);
       }),
     );
   }
 
   createPassword(email: string, code: string, newPassword: string) {
     return this.apiMockService.createPassword(email, code, newPassword);
+  }
+  
+  requestPasswordReset(email: string) {
+    return this.apiMockService.requestPasswordReset(email);
+  }
+
+  confirmPasswordReset(email: string, code: string, newPassword: string) {
+    return this.apiMockService.confirmPasswordReset(email, code, newPassword);
   }
 
   logout() {
