@@ -1,120 +1,84 @@
-# 🚀 Teste Técnico Front-End (Angular)
+# Teste Técnico – Front-End (Angular)
 
-Este repositório contém o desenvolvimento de um **teste técnico para vaga de estágio em Front-End (Angular)**.  
-O projeto utiliza **Angular 18**, **standalone components** e é **100% mockado**, sem backend real.  
-
-O foco é implementar **autenticação, primeiro acesso, proteção de rotas e dashboard simples**, seguindo boas práticas de modularização e UX mínima.
-
----
-
-## 🧱 Stack utilizada
-
-- Angular 18
-- TypeScript
-- RxJS
-- Reactive Forms
-- Standalone Components
-- LocalStorage (simulação de sessão via StorageService)
-- Mock de backend (`ApiMockService`)
-
----
-
-## 📂 Estrutura do projeto
-```bash
-src/
-├── app/
-│ ├── auth/ ← Módulo de autenticação (login, create-password, forgot-password)
-│ ├── dashboard/ ← Módulo protegido
-│ ├── core/ ← Services, guards e models
-│ ├── shared/ ← Componentes reutilizáveis (BaseInput, FormError)
-│ └── app.routes.ts ← Rotas lazy-loaded
-└── assets/
-```
-
-- **Modules**:
-  - `AuthModule` → login, create-password, forgot-password  
-  - `DashboardModule` → dashboard protegido  
-- **Core**:
-  - `StorageService` → gerencia token no `localStorage`  
-  - `AuthService` → login/logout usando mock  
-  - `ApiMockService` → simula backend  
-  - `AuthGuardService` → protege rotas via `canMatch`  
-- **Shared**:
-  - `BaseInputComponent` → inputs consistentes e integrados com Reactive Forms  
-  - `FormErrorComponent` → mensagens de erro declarativas, para campos individuais e FormGroup
-
----
-
-## ✅ Funcionalidades implementadas
-
-- **Login**
-  - Reactive Forms com validação (required, email, minlength)
-  - Mock de autenticação
-  - Token salvo no `localStorage` via `StorageService`
-  - Redirecionamento para dashboard após sucesso
-
-- **Create Password (primeiro acesso)**
-  - Formulário com validação (senha, confirmação)
-  - Verificação de senha e confirmação via `FormGroup` validator
-  - Mock de criação de senha
-
-- **Proteção de Rotas**
-  - `AuthGuard` usando `canMatch` para lazy-loaded modules
-  - Redireciona para `/login` se não autenticado
-
-- **Logout**
-  - Limpa token no `sessionStorage`
-  - Redireciona para `/login`
-
-- **Componentes reutilizáveis**
-  - `BaseInputComponent` → inputs consistentes e integrados com Reactive Forms  
-  - `FormErrorComponent` → mensagens de erro declarativas, para campos individuais e FormGroup
-
----
-
-## 📌 Funcionalidades pendentes
-
-- Recuperação de senha (Forgot Password)
-- Validação de código de recuperação (mock)
-- Design completo para o Dashboard (atualmente em desenvolvimento)
-- UX adicional: loading, feedback visual e animações
-
----
-
-## 🧪 Mock de Backend
-
-- `ApiMockService` simula backend em memória  
-- Usuários armazenados em array  
-- Token fake: `mock-token-123`  
-- Métodos simulados:  
-  - Login  
-  - Create Password / Primeiro acesso  
-  - Recuperação de senha (em desenvolvimento)  
-
----
-
-## 🎯 Objetivo do projeto
-
-- Implementar **teste técnico funcional**  
-- Seguir boas práticas de Angular 18  
-- Criar **modularidade clara** (Core, Shared, feature modules)  
-- Garantir **UX mínima e validação de formulários**  
-- Ter **mock bem implementado**. 
+Projeto desenvolvido como parte do processo seletivo para **vaga de Estágio Front-End**, conforme especificações do desafio técnico.
 
 ---
 
 ## ▶️ Como rodar o projeto
 
-### Pré-requisitos
-- Node.js 18 LTS ou superior
-- Angular 18 ou superior
-
+1. Clone o repositório:
 ```bash
-# Instalar dependências
+git clone https://github.com/DevKelvinK/KelvinBoard-Dashboard.git
+```
+
+2. Entre na pasta do projeto:
+```bash
+cd KelvinBoard-Dashboard
+```
+
+3. Instale as dependências:
+```bash
 npm install
+```
 
-# Rodar servidor de desenvolvimento
-npm start
+4. Rode o projeto:
+```bash
+ng serve
+```
 
-# Acessar no navegador
+5. Acesse no navegador:
+```
 http://localhost:4200
+```
+
+---
+
+## 👤 Usuário de teste
+
+- **E-mail:** primeiroacesso@email.com
+- **Senha:** (criar no primeiro acesso)
+- **Código mock:** 123456
+
+> Obs: o login só funciona após a criação de senha (fluxo de primeiro acesso).
+
+---
+
+## 🔐 Código mock
+
+- **Código de criação/recuperação de senha:** `123456`
+
+Regras simuladas:
+- Código expira em **2 minutos**
+- Reenvio permitido após **30 segundos**
+- Todas as respostas possuem delay simulado (800ms)
+
+---
+
+## 🧠 Decisões técnicas
+
+- Angular 18 com **Reactive Forms**
+- Tipagem forte com **interfaces e DTOs**
+- Arquitetura modular:
+  - `AuthModule`
+  - `DashboardModule`
+  - `CoreModule`
+  - `SharedModule`
+- Autenticação e backend **100% mockados no front-end**
+- Uso de **guards** para proteção de rotas
+- Componentes reutilizáveis para inputs e validações
+- Foco em **UX**, mensagens claras e estados de loading/erro/vazio
+
+---
+
+## 🚀 Melhorias futuras
+
+- Integração com backend real
+- Testes unitários (Jasmine/Karma)
+- Persistência real de usuários
+- Paginação na tabela do dashboard
+- Refresh token e interceptor global
+- Melhorias visuais e animações
+
+---
+
+Desenvolvido por [**Kelvin Kesley**](https://www.linkedin.com/in/kelvin-kesley/).
