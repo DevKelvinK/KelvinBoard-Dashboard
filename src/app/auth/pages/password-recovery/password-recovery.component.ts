@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { finalize } from 'rxjs';
 
 interface PasswordRecoveryForm {
   email: FormControl;
@@ -23,10 +24,6 @@ type step = 1 | 2;
 export class PasswordRecoveryComponent {
   passwordRecoveryForm: FormGroup<PasswordRecoveryForm>;
   passwordStrengthLevel: PasswordStrength = 'weak';
-  activeStep: step = 1;
-  errorButton = false;
-  clicked = false;
-
   constructor(
     private router: Router,
     private AuthService: AuthService,
@@ -47,56 +44,6 @@ export class PasswordRecoveryComponent {
     )
   }
 
-  // Lógica para reenvio de código de recuperação.
-  canResendCode = false;
-  resendCountdown = 30;
-  private resendTimer?: number;
-
-  private startCodeTimer() {
-    this.canResendCode = false;
-    this.resendCountdown = 30;
-
-    this.resendTimer = window.setInterval(() => {
-      this.resendCountdown--
-
-      if (this.resendCountdown === 0) {
-        this.canResendCode = true;
-        clearInterval(this.resendTimer);
-      }
-    }, 1000);
-  }
-
-  // Adiciona erro "passwordMismatch" caso senha e confirmação de senha não coincidirem
-  passwordConfirmationValidation(from: AbstractControl) {
-    const pass = from.get('newPassword')?.value;
-    const passConfirm = from.get('newPasswordConfirm')?.value;
-
-    if (!pass || !passConfirm) {
-      return null
-    }
-
-    if (pass !== passConfirm) {
-      return { passwordMismatch: true }
-    } else {
-      return null;
-    }
-  }
-
-  // Atualização dinâmica da cor do botão conforme validação dos formulários
-  ngOnInit() {
-    this.passwordRecoveryForm.statusChanges.subscribe(() => {
-      if (!this.clicked) return;
-
-      if (this.activeStep === 1) {
-        this.errorButton = this.emailControl.invalid;
-      }
-
-      if (this.activeStep === 2) {
-        this.errorButton = this.passwordRecoveryForm.invalid;
-      }
-    });
-  }
-
   // Getters para acessar os FormControls do form (email, código, senha e confirmação de senha)
   get emailControl(): FormControl {
     return this.passwordRecoveryForm.get('email') as FormControl;
@@ -112,6 +59,24 @@ export class PasswordRecoveryComponent {
 
   get newPasswordConfirmControl(): FormControl {
     return this.passwordRecoveryForm.get('newPasswordConfirm') as FormControl;
+  }
+
+  // Lógica para reenvio de código de recuperação.
+  canResendCode = false;
+  resendCountdown = 30;
+  private resendTimer?: number;
+  private startCodeTimer() {
+    this.canResendCode = false;
+    this.resendCountdown = 30;
+
+    this.resendTimer = window.setInterval(() => {
+      this.resendCountdown--
+
+      if (this.resendCountdown === 0) {
+        this.canResendCode = true;
+        clearInterval(this.resendTimer);
+      }
+    }, 1000);
   }
 
   // Função para indicador de força de senha
@@ -146,6 +111,40 @@ export class PasswordRecoveryComponent {
     }
   }
 
+  // Adiciona erro "passwordMismatch" caso senha e confirmação de senha não coincidirem
+  passwordConfirmationValidation(from: AbstractControl) {
+    const pass = from.get('newPassword')?.value;
+    const passConfirm = from.get('newPasswordConfirm')?.value;
+
+    if (!pass || !passConfirm) {
+      return null
+    }
+
+    if (pass !== passConfirm) {
+      return { passwordMismatch: true }
+    } else {
+      return null;
+    }
+  }
+
+  // Atualização dinâmica da cor do botão conforme validação dos formulários
+  activeStep: step = 1;
+  errorButton = false;
+  clicked = false;
+  ngOnInit() {
+    this.passwordRecoveryForm.statusChanges.subscribe(() => {
+      if (!this.clicked) return;
+
+      if (this.activeStep === 1) {
+        this.errorButton = this.emailControl.invalid;
+      }
+
+      if (this.activeStep === 2) {
+        this.errorButton = this.passwordRecoveryForm.invalid;
+      }
+    });
+  }
+
   onSubmit () {
     if (this.activeStep === 1) {
       this.sendCode()
@@ -154,6 +153,7 @@ export class PasswordRecoveryComponent {
     }
   }
 
+  isLoading = false;
   sendCode () {
     this.clicked = true;
 
@@ -163,9 +163,11 @@ export class PasswordRecoveryComponent {
       return;
     }
 
-    this.AuthService.requestPasswordReset(
-      this.passwordRecoveryForm.value.email
-    ).subscribe({
+    this.isLoading = true;
+
+    this.AuthService.requestPasswordReset(this.passwordRecoveryForm.value.email)
+    .pipe(finalize(() => {this.isLoading = false}))
+    .subscribe({
       next: () => {
         this.toastService.success(`Código de recuperação ${this.activeStep === 2 ? 'reenviado' : 'enviado'} para o seu email! (Seu código expira em 2 minutos) Código (mock) para testes: 123456`, 10000);
         this.errorButton = false;
@@ -175,8 +177,10 @@ export class PasswordRecoveryComponent {
         }
       },
       error: (err) => {
+        if (err.field === 'email') {
+          this.emailControl.setErrors({ notFound: true });
+        } 
         this.toastService.error(err.message);
-        this.emailControl.setErrors({ notFound: true });
         this.errorButton = true;
         this.emailControl.markAsTouched();
       }
@@ -193,11 +197,16 @@ export class PasswordRecoveryComponent {
       return;
     }
 
-    this.AuthService.confirmPasswordReset(
+    this.isLoading = true;
+
+    this.AuthService.confirmPasswordReset
+    (
       this.passwordRecoveryForm.value.email,
       this.passwordRecoveryForm.value.code,
       this.passwordRecoveryForm.value.newPassword,
-    ).subscribe({
+    )
+    .pipe(finalize(() => {this.isLoading = false}))
+    .subscribe({
       next: () => {
         this.toastService.success('Nova senha criada com secesso!');
         this.router.navigate(['/login']);

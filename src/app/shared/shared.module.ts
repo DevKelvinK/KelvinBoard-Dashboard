@@ -3,15 +3,18 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { BaseInputComponent } from './components/base-input/base-input.component';
+import { ButtonComponent } from './components/button/button.component';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    BaseInputComponent
+    BaseInputComponent,
+    ButtonComponent
   ],
   exports: [
-    BaseInputComponent
+    BaseInputComponent,
+    ButtonComponent
   ]
 })
 export class SharedModule { }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -17,9 +18,6 @@ interface LoginForm {
 })
 export class LoginComponent {
   loginForm: FormGroup<LoginForm>;
-  errorButton = false;
-   clicked = false;
-
   constructor(
     private router: Router,
     private AuthService: AuthService,
@@ -31,15 +29,6 @@ export class LoginComponent {
     })
   }
 
-  // Atualização dinâmica da cor do botão conforme validação dos formulários
-  ngOnInit() {
-    this.loginForm.statusChanges.subscribe(() => {
-      if (this.clicked) {
-        this.errorButton = this.loginForm.invalid;
-      }
-    });
-  }
-
   // Getters para acessar os FormControls do form (email e senha)
   get emailControl(): FormControl {
     return this.loginForm.get('email') as FormControl;
@@ -49,24 +38,42 @@ export class LoginComponent {
     return this.loginForm.get('password') as FormControl;
   }
 
+  errorButton = false;
+  clicked = false;
+  // Atualização dinâmica da cor do botão conforme validação dos formulários
+  ngOnInit() {
+    this.loginForm.statusChanges.subscribe(() => {
+      if (this.clicked) {
+        this.errorButton = this.loginForm.invalid;
+      }
+    });
+  }
+
+  isLoading = false;
   submit() {
     this.clicked = true;
 
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid || this.isLoading) {
       this.errorButton = true;
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    this.AuthService.login(
-      this.loginForm.value.email,
-      this.loginForm.value.password
-    ).subscribe({
-      next: () => {
+    this.isLoading = true;
+
+    this.AuthService.login(this.loginForm.value.email,this.loginForm.value.password)
+    .pipe(finalize(() => {this.isLoading = false}))
+    .subscribe({
+      next: () => 
+      {
         this.toastService.success('Login realizado com sucesso!');
         this.router.navigate(['/dashboard'])
       },
-      error: (err) => {
+      error: (err) => 
+      {
+        if (err.field === 'email') {
+          this.emailControl.setErrors({ notFound: true });
+        } 
         this.toastService.error(err.message);
         this.errorButton = true;
         this.emailControl.markAsTouched();

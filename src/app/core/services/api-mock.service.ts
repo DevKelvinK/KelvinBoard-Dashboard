@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, dematerialize, materialize } from 'rxjs/operators';
 
 import { User } from '../models/user.model';
 import { AuthResponse } from '../models/auth-response.model';
@@ -24,7 +24,7 @@ export class ApiMockService {
     },
     {
       email: 'tenhosenha@email.com',
-      password: 'tenhoSenha@123',
+      password: 'tenhoSenh@123',
     },
     {
       email: 'esquecisenha@email.com',
@@ -37,20 +37,29 @@ export class ApiMockService {
   private ramDelay(min = 600, max = 1200): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+  private simulateError(field: string, message: string) {
+    return throwError(() => ({ field, message })).pipe(
+      // Simulação de delay na resposta do erro.
+      materialize(),
+      delay(this.ramDelay()),
+      dematerialize()
+    );
+  }
   
   login(email: string, password: string): Observable<AuthResponse> {
     const userFound = this.users.find((user) => user.email === email);
 
     if (!userFound) {
-      return throwError(() => new Error('Usuário não encontrado, digite um email cadastrado.')).pipe(delay(this.ramDelay()));
+      return this.simulateError('email', 'Usuário não encontrado, digite um email cadastrado.');
     }
 
     if (!userFound.password) {
-      return throwError(() => new Error('Usuário sem senha cadastrada, click em "Crie uma senha".')).pipe(delay(this.ramDelay()));
+      return this.simulateError('password', 'Usuário sem senha cadastrada, click em "Crie uma senha".');
     }
 
     if (userFound.password !== password) {
-      return throwError(() => new Error('Senha inválida, tente novamente.')).pipe(delay(this.ramDelay()));
+      return this.simulateError('password', 'Senha inválida, tente novamente.');
     }
 
     return of({token: 'mock-token-123'}).pipe(delay(this.ramDelay()));
@@ -58,17 +67,17 @@ export class ApiMockService {
 
   createPassword(email: string, code: string, newPassword: string): Observable<void> {
     if (code !== '123456') {
-      return throwError(() => new Error('Código informado inválido!')).pipe(delay(this.ramDelay()))
+      return this.simulateError('code', 'Código informado inválido!');
     }
 
     const userFound = this.users.find((user) => user.email === email);
 
     if (!userFound) {
-      return throwError(() => new Error('Usuário não encontrado, digite um email cadastrado.')).pipe(delay(this.ramDelay()));
+      return this.simulateError('email', 'Usuário não encontrado, digite um email cadastrado.');
     }
 
     if (userFound.password) {
-      return throwError(() => new Error('Esse email já possui uma senha.')).pipe(delay(this.ramDelay()));
+      return this.simulateError('password', 'Esse email já possui uma senha.');
     }
 
     userFound.password = newPassword;
@@ -78,6 +87,10 @@ export class ApiMockService {
 
   requestPasswordReset(email: string): Observable<PasswordResetResponse> {
     const userFound = this.users.find((user) => user.email === email);
+    
+    if (!userFound) {
+      return this.simulateError('email', 'Usuário não encontrado, digite um email cadastrado.');
+    }
 
     this.passwordResetData = {
       email,
@@ -85,29 +98,27 @@ export class ApiMockService {
       createAt: Date.now(),
     };
 
-    if (!userFound) {
-      return throwError(() => new Error('Usuário não encontrado, digite um email cadastrado.')).pipe(delay(this.ramDelay()));
-    }
-
     return of({ resetId: this.passwordResetData.code }).pipe(delay(this.ramDelay()));
   }
 
   confirmPasswordReset(email: string, code: string, newPassword: string): Observable<void> {
     if (!this.passwordResetData) {
-      return throwError(() => new Error('Nenhum pedido de recuperação de senha encontrado para esse email.')).pipe(delay(this.ramDelay()))
+      return this.simulateError('email', 'Nenhum pedido de recuperação de senha encontrado para esse email.');
     }
     
     const codeExpired = (Date.now() - this.passwordResetData.createAt) > 2 * 60 * 1000;
     if (codeExpired) {
-      return throwError(() => new Error('Código expirado, solicite um novo código de recuperação.')).pipe(delay(this.ramDelay()))
+      return this.simulateError('code', 'Código expirado, solicite um novo código de recuperação.');
     }
 
     if (code !== this.passwordResetData.code) {
-      return throwError(() => new Error('Código informado inválido!')).pipe(delay(this.ramDelay()))
+      return this.simulateError('code', 'Código informado inválido!');
     }
 
     const userFound = this.users.find((user) => user.email === email);
     (userFound) && (userFound.password = newPassword)
+
+    this.passwordResetData = null;
 
     return of(void 0).pipe(delay(this.ramDelay()));
   }

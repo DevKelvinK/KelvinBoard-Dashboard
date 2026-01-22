@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { finalize } from 'rxjs';
 
 interface CreatePasswordForm {
   email: FormControl;
@@ -27,9 +28,6 @@ type PasswordStrength = 'weak' | 'medium' | 'strong' | 'veryStrong';
 export class CreatePasswordComponent {
   createPasswordForm: FormGroup<CreatePasswordForm>;
   passwordStrengthLevel: PasswordStrength = 'weak';
-  errorButton = false;
-  clicked = false;
-
   constructor(
     private router: Router,
     private AuthService: AuthService,
@@ -53,31 +51,6 @@ export class CreatePasswordComponent {
       ?.valueChanges.subscribe((value) => {
         this.passwordStrengthLevel = this.passwordStrength(value);
       });
-  }
-
-  // Adiciona erro "passwordMismatch" caso senha e confirmação de senha não coincidirem
-  passwordConfirmationValidation(from: AbstractControl) {
-    const pass = from.get('newPassword')?.value;
-    const passConfirm = from.get('newPasswordConfirm')?.value;
-
-    if (!pass || !passConfirm) {
-      return null
-    }
-
-    if (pass !== passConfirm) {
-      return { passwordMismatch: true }
-    } else {
-      return null;
-    }
-  }
-
-  // Atualização dinâmica da cor do botão conforme validação dos formulários
-  ngOnInit() {
-    this.createPasswordForm.statusChanges.subscribe(() => {
-      if (this.clicked) {
-        this.errorButton = this.createPasswordForm.invalid;
-      }
-    });
   }
 
   // Getters para acessar os FormControls do form (email, código, senha e confirmação de senha)
@@ -129,6 +102,34 @@ export class CreatePasswordComponent {
     }
   }
 
+  // Adiciona erro "passwordMismatch" caso senha e confirmação de senha não coincidirem
+  passwordConfirmationValidation(from: AbstractControl) {
+    const pass = from.get('newPassword')?.value;
+    const passConfirm = from.get('newPasswordConfirm')?.value;
+
+    if (!pass || !passConfirm) {
+      return null
+    }
+
+    if (pass !== passConfirm) {
+      return { passwordMismatch: true }
+    } else {
+      return null;
+    }
+  }
+
+  // Atualização dinâmica da cor do botão conforme validação dos formulários
+  errorButton = false;
+  clicked = false;
+  ngOnInit() {
+    this.createPasswordForm.statusChanges.subscribe(() => {
+      if (this.clicked) {
+        this.errorButton = this.createPasswordForm.invalid;
+      }
+    });
+  }
+
+  isLoading = false;
   submit() {
     this.clicked = true;
 
@@ -138,16 +139,23 @@ export class CreatePasswordComponent {
       return;
     }
 
-    this.AuthService.createPassword(
+    this.isLoading = true;
+
+    this.AuthService.createPassword
+    (
       this.createPasswordForm.value.email,
       this.createPasswordForm.value.code,
       this.createPasswordForm.value.newPassword,
-    ).subscribe({
+    ).pipe(finalize(() => {this.isLoading = false}))
+    .subscribe({
       next: () => {
         this.toastService.success('Senha criada com sucesso!');
         this.router.navigate(['/login']);
       },
       error: (err) => {
+        if (err.field === 'email') {
+          this.emailControl.setErrors({ notFound: true });
+        } 
         this.toastService.error(err.message);
         this.errorButton = true;
         this.emailControl.markAsTouched();

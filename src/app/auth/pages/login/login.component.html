@@ -3,7 +3,7 @@
   pageSubTitle="Insira o endereço de email e senha para entrar em sua conta KelvinBoard"
   formTitle="Login"
 >
-  <form [formGroup]="loginForm" class="flex flex-col w-full">
+  <form [formGroup]="loginForm" (ngSubmit)="submit()" class="flex flex-col w-full">
     <div class="flex flex-col gap-4">
       <app-base-input
         [control]="emailControl"
@@ -32,17 +32,9 @@
       Esqueceu a senha?
     </a>
     <div class="flex flex-col items-center justify-center gap-4 w-full mt-8">
-      <button
-        type="submit"
-        class="w-full py-3 px-6 rounded-lg text-base font-medium text-white shadow-[0_8px_12px_rgba(148,64,255,0.2)] outline-none focus:outline-2 duration-300 ease-in-out"
-        [ngClass]="{
-          'bg-primary hover:bg-secondary focus:outline-secondary focus:bg-secondary': !errorButton,
-          'bg-red-500 hover:bg-red-600 focus:outline-red-600 focus:bg-red-600': errorButton
-        }"
-        (click)="submit()"
-      >
+      <app-button [loading]="isLoading" [errorButton]="errorButton">
         Login
-      </button>
+      </app-button>
       <a
         routerLink="/create-password"
         routerLinkActive="active-page"
