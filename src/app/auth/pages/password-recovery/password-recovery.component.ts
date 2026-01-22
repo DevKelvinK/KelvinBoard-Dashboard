@@ -169,7 +169,7 @@ export class PasswordRecoveryComponent {
     .pipe(finalize(() => {this.isLoading = false}))
     .subscribe({
       next: () => {
-        this.toastService.success(`Código de recuperação ${this.activeStep === 2 ? 'reenviado' : 'enviado'} para o seu email! (Seu código expira em 2 minutos) Código (mock) para testes: 123456`, 10000);
+        this.toastService.show(`Código de recuperação ${this.activeStep === 2 ? 'reenviado' : 'enviado'} para o seu email! (Seu código expira em 2 minutos) Código (mock) para testes: 123456`, 'info', 8000);
         this.errorButton = false;
         this.startCodeTimer();
         if (this.activeStep === 1) {

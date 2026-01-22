@@ -13,6 +13,12 @@ export class DashboardComponent{
     private router: Router
   ) {}
 
+  isMenuOpen: boolean = false;
+
+  closeMenu() {
+    this.isMenuOpen = false;
+  }
+
   logout() {
      this.authService.logout()
      this.router.navigate(['/login']);

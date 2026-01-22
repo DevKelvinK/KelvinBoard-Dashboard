@@ -1,6 +1,211 @@
-<div class="flex items-center justify-center w-screen h-screen">
-  <div class="p-16 bg-sky-500 text-center rounded-2xl">
-    <h1 class=" text-white text-2xl font-bold pb-4">EM DENSENVOLVIMENTO</h1>
-    <button (click)="logout()" class="p-3 px-6 bg-white rounded-md">Logout</button>
+<main class="flex min-h-screen bg-colorGray300">
+  @if (isMenuOpen) {
+    <div
+      class="fixed inset-0 bg-black/40 z-30 lg:hidden"
+      (click)="closeMenu()"
+    ></div>
+  }
+  
+  <aside
+    class="fixed lg:static top-0 left-0 z-40 h-screen max-w-80 w-3/5 sm:w-2/3 lg:w-1/3 pt-12 px-9 pb-10 shadow-md bg-white flex flex-col items-center transform transition-transform duration-300 ease-in-out lg:translate-x-0 -translate-x-full"
+    [class.translate-x-0]="isMenuOpen"
+  >
+    <div class="w-full pb-6 border-b border-colorGray300">
+      <img src="/assets/svg/logo.svg" alt="Logo" class="mx-auto w-[80%]" />
+    </div>
+
+    <nav class="flex-1 flex flex-col gap-4 pt-6 w-full">
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active-component"
+        (click)="closeMenu()"
+        class="flex gap-2 items-center p-4 rounded-md text-colorGray600 text-base outline-none hover:bg-colorGray300 focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+      >
+        <img src="/assets/svg/dashboard-icon.svg" alt="" />
+        Dashboard
+      </a>
+
+      <a
+        routerLink="/pedidos"
+        routerLinkActive="active-component"
+        (click)="closeMenu()"
+        class="flex gap-2 items-center p-4 rounded-md text-colorGray600 text-base outline-none hover:bg-colorGray300 focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+      >
+        <img src="/assets/svg/pedidos-icon.svg" alt="" />
+        Pedidos
+      </a>
+
+      <a
+        routerLink="/relatorios"
+        routerLinkActive="active-component"
+        (click)="closeMenu()"
+        class="flex gap-2 items-center p-4 rounded-md text-colorGray600 text-base outline-none hover:bg-colorGray300 focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+      >
+        <img src="/assets/svg/relatorios-icon.svg" alt="" />
+        Relatórios
+      </a>
+
+      <a
+        routerLink="/perfil"
+        routerLinkActive="active-component"
+        (click)="closeMenu()"
+        class="flex gap-2 items-center p-4 rounded-md text-colorGray600 text-base outline-none hover:bg-colorGray300 focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+      >
+        <img src="/assets/svg/perfil-icon.svg" alt="" />
+        Perfil
+      </a>
+    </nav>
+
+    <button
+      class="hidden group lg:flex items-center gap-2 mt-auto -ml-5 py-2 px-4 rounded-lg self-start text-base text-colorGray600 outline-none hover:text-secondary focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+      (click)="logout()"
+    >
+      <i class="ph ph-sign-out text-lg"></i>
+      <span class="group-hover:underline">Logout</span>
+    </button>
+  </aside>
+
+  <div class="p-6 w-full">
+    <header class="flex flex-col mb-3 sm:mb-5 gap-9 sm:gap-6 min-h-16 md:justify-between">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-6">
+          <button
+            class="lg:hidden py-1 px-2 rounded-lg shadow bg-primary outline-none hover:bg-secondary focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+            [disabled]="isMenuOpen"
+            (click)="isMenuOpen = true"
+          >
+            <i class="ph ph-list text-2xl text-white font-bold"></i>
+          </button>
+          
+          <span class="text-sm text-colorGray600 cursor-default">pages <span class="text-secondary">/ Dashboard</span></span>
+        </div>
+
+        <button
+          class="lg:hidden group flex items-center gap-2 py-1 px-2 my-auto rounded-lg self-start text-sm text-colorGray600 outline-none hover:text-secondary focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+          (click)="logout()"
+        >
+          <i class="ph ph-sign-out text-base"></i>
+          <span class="group-hover:underline">Logout</span>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-end sm:justify-between gap-2">
+        <h1 class="hidden sm:flex text-4xl font-bold font-montse text-gray-800">
+          Bem vindo(a)!
+        </h1>
+
+        <div
+          class="flex gap-2 py-1 px-3 rounded-2xl text-sm bg-colorGray600/30"
+        >
+          <button
+            class="px-3 sm:px-5 py-1 rounded-full bg-colorGray300 text-secondary outline-none hover:bg-colorGray600 focus:outline-none focus:outline-2 focus:outline-secondary duration-300 ease-in-out active-button"
+          >
+            7 dias
+          </button>
+          <button
+            class="px-3 sm:px-5 py-1 rounded-full bg-colorGray300 text-secondary outline-none hover:bg-colorGray600 focus:outline-none focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+          >
+            30 dias
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- KPIs -->
+    <section class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-3">
+      <div class="bg-white shadow rounded-[20px] py-4 px-7 flex flex-col">
+        <span class="text-colorGray600 font-medium">Receita</span>
+        <span class="text-2xl font-bold text-secondary mt-2">R$ 0,00</span>
+        <span class="text-sm text-colorGray600 mt-1">Total do período</span>
+      </div>
+
+      <div class="bg-white shadow rounded-[20px] py-4 px-7 flex flex-col">
+        <span class="text-colorGray600 font-medium">Pedidos</span>
+        <span class="text-2xl font-bold text-secondary mt-2">0</span>
+        <span class="text-sm text-colorGray600 mt-1">Total de pedidos</span>
+      </div>
+
+      <div class="bg-white shadow rounded-[20px] py-4 px-7 flex flex-col">
+        <span class="text-colorGray600 font-medium">Ticket Médio</span>
+        <span class="text-2xl font-bold text-secondary mt-2">R$ 0,00</span>
+        <span class="text-sm text-colorGray600 mt-1">Média por pedido</span>
+      </div>
+    </section>
+
+    <!-- Gráfico de linha -->
+    <section class="bg-white shadow rounded-lg p-4 mb-6">
+      <h2 class="text-lg font-semibold text-gray-700 mb-4">Receita por dia</h2>
+      <div
+        class="h-64 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400"
+      >
+        Gráfico de linha
+      </div>
+    </section>
+
+    <!-- Tabela de pedidos -->
+    <section class="bg-white shadow rounded-lg p-4">
+      <div
+        class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2"
+      >
+        <h2 class="text-lg font-semibold text-gray-700">Pedidos</h2>
+        <!-- Busca por cliente -->
+        <input
+          type="text"
+          placeholder="Buscar cliente..."
+          class="border rounded px-3 py-2 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Data
+              </th>
+              <th
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Cliente
+              </th>
+              <th
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Valor
+              </th>
+              <th
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <!-- Placeholder de linhas -->
+            <tr class="bg-gray-50">
+              <td class="px-4 py-2 text-sm text-gray-500">--/--/----</td>
+              <td class="px-4 py-2 text-sm text-gray-500">Cliente</td>
+              <td class="px-4 py-2 text-sm text-gray-500">R$ 0,00</td>
+              <td class="px-4 py-2 text-sm text-gray-500">Status</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="px-4 py-2 text-sm text-gray-500">--/--/----</td>
+              <td class="px-4 py-2 text-sm text-gray-500">Cliente</td>
+              <td class="px-4 py-2 text-sm text-gray-500">R$ 0,00</td>
+              <td class="px-4 py-2 text-sm text-gray-500">Status</td>
+            </tr>
+            <!-- Adicione mais linhas conforme necessário -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Estados: Loading / Sem dados / Erro -->
+      <div class="text-center text-gray-400 py-4">
+        <!-- Coloque aqui mensagens dinâmicas depois -->
+        Nenhum dado encontrado
+      </div>
+    </section>
   </div>
-</div>
+</main>

@@ -1,0 +1,22 @@
+.active-component {
+  background-color: #4318FF;
+  color: white;
+
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.active-component:hover {
+    background-color: #2B3674;
+  }
+
+.active-button {
+  background-color: #4318FF;
+  color: white;
+
+  font-weight: bold;
+}
+
+.active-button:hover {
+    background-color: #2B3674;
+  }

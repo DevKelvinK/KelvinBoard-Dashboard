@@ -66,14 +66,14 @@ export class ApiMockService {
   }
 
   createPassword(email: string, code: string, newPassword: string): Observable<void> {
-    if (code !== '123456') {
-      return this.simulateError('code', 'Código informado inválido!');
-    }
-
     const userFound = this.users.find((user) => user.email === email);
 
     if (!userFound) {
       return this.simulateError('email', 'Usuário não encontrado, digite um email cadastrado.');
+    }
+
+    if (code !== '123456') {
+      return this.simulateError('code', 'Código informado inválido!');
     }
 
     if (userFound.password) {
