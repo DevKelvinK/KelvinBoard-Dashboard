@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { finalize } from 'rxjs';
 

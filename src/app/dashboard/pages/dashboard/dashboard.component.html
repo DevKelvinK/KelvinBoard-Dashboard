@@ -5,7 +5,7 @@
       (click)="closeMenu()"
     ></div>
   }
-  
+
   <aside
     class="fixed lg:static top-0 left-0 z-40 h-screen max-w-80 w-3/5 sm:w-2/3 lg:w-1/3 pt-12 px-9 pb-10 shadow-md bg-white flex flex-col items-center transform transition-transform duration-300 ease-in-out lg:translate-x-0 -translate-x-full"
     [class.translate-x-0]="isMenuOpen"
@@ -66,7 +66,22 @@
   </aside>
 
   <div class="p-6 w-full">
-    <header class="flex flex-col mb-3 sm:mb-5 gap-9 sm:gap-6 min-h-16 md:justify-between">
+    <!-- APAGAR DEPOIS QUE TERMINAR TESTES -->
+    <!-- <div class="flex">
+      <button
+        type="button"
+        class="p-3 rounded-xl bg-red-500 text-white"
+        (click)="test()"
+      >
+        Teste de Mudança
+      </button>
+
+      <h3 class="text-2xl text-red-400 px-4">{{ kpis.avgTicket }}</h3>
+    </div> -->
+
+    <header
+      class="flex flex-col mb-3 sm:mb-5 gap-9 sm:gap-6 min-h-16 md:justify-between"
+    >
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-6">
           <button
@@ -74,17 +89,19 @@
             [disabled]="isMenuOpen"
             (click)="isMenuOpen = true"
           >
-            <i 
+            <i
               class="ph ph-list text-2xl font-medium transition-transform duration-500 group-hover:translate-x-1 group-hover:opacity-0 group-focus:translate-x-1 group-focus:opacity-0"
             >
             </i>
-            <i 
+            <i
               class="ph ph-arrow-fat-lines-right text-2xl font-medium absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-500"
             >
             </i>
           </button>
 
-          <span class="text-sm text-colorGray-600 cursor-default">pages <span class="text-secondary">/ Dashboard</span></span>
+          <span class="text-sm text-colorGray-600 cursor-default"
+            >pages <span class="text-secondary">/ Dashboard</span></span
+          >
         </div>
 
         <button
@@ -111,23 +128,26 @@
     <!-- KPIs -->
     <section class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-3">
       <app-kpi-card
-      cardTitle="Receita"
-        cardValue="R$ 0,00"
+        cardTitle="Receita"
+        cardValue="R$ {{ kpis.revenue.toFixed(2).replace('.', ',') }}"
         iconClass="ph ph-currency-dollar"
+        [isLoading]="isLoading"
       >
       </app-kpi-card>
 
       <app-kpi-card
         cardTitle="Pedidos"
-        cardValue="0"
+        cardValue="{{ kpis.ordersCount }}"
         iconClass="ph ph-list-checks "
+        [isLoading]="isLoading"
       >
       </app-kpi-card>
 
       <app-kpi-card
         cardTitle="Ticket Médio"
-        cardValue="R$ 0,00"
+        cardValue="R$ {{ kpis.avgTicket.toFixed(2).replace('.', ',') }}"
         iconClass="ph ph-chart-line-up"
+        [isLoading]="isLoading"
       >
       </app-kpi-card>
     </section>
@@ -143,6 +163,11 @@
     </section>
 
     <!-- Tabela de pedidos -->
-    <app-order-table></app-order-table>
+    <!-- [orders]="orders"
+    (search)="onSearch($event)" -->
+    <app-orders-table
+      [orders]="orders"
+    >
+    </app-orders-table>
   </div>
 </main>

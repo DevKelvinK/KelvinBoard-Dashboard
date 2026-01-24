@@ -5,15 +5,13 @@
     <div>
       <h2 class="text-lg font-semibold text-gray-700">Pedidos</h2>
       <span class="flex items-center gap-1 pl-1 text-sm text-colorGray-600">
-        <i class="ph-fill ph-check-circle text-base text-green-400"></i>
-        <!-- @if (orders.length > 0) {
+        @if (orders.length > 0) {
           <i class="ph-fill ph-check-circle text-base text-green-400"></i>
           } @else {
             <i class="ph-fill ph-x-circle text-base text-red-400"></i>
-        } -->
-        3 feitos essa semana
+        }
+        <span>{{ orders.length }} recebido{{ (orders.length > 1) ? "s" : "" }} {{ (period == 7) ? "essa semana" : "esse mês" }}</span>
       </span>
-      <!-- <span>{{ orders.length + 1 }} feito{{ (orders.length > 0) ? "s" : "" }} {{ (period == 7) ? "essa semana" : "esse mês" }}</span> -->
     </div>
 
     <!-- [control]="orderTableControl" -->
@@ -55,30 +53,10 @@
       </thead>
 
       <tbody class="divide-y divide-colorGray-600/30">
-        <tr class="hover:bg-colorGray100/60">
-          <td class="px-3 py-3 min-w-40 grow text-sm text-colorGray600">
-            22/01/2026
-          </td>
-          <td class="px-3 py-3 min-w-40 grow text-sm text-colorGray600">
-            <div class="flex items-center gap-2">
-              <img src="/assets/images/cliente-1.png" class="w-8 h-8" />
-              <span>Kelvin Kesley</span>
-            </div>
-          </td>
-          <td class="px-3 py-3 min-w-40 grow text-sm font-medium text-colorGray700">
-            R$ 150,00
-          </td>
-          <td class="px-3 py-3 min-w-40 grow text-sm">
-            <span class="inline-block py-1 px-3 rounded-full text-xs font-medium bg-green-100 text-green-600">
-              Pago
-            </span>
-          </td>
-        </tr>
-
-        <!-- @for (order of orders; track order.id) { 
+        @for (order of orders; track order.id) { 
           <tr class="hover:bg-colorGray100/60">
             <td class="px-4 py-3 text-sm text-colorGray600">
-              {{ order.date }}
+              {{ order.date.toLocaleDateString('pt-BR') }}
             </td>
             <td class="px-4 py-3 text-sm text-colorGray600">
               {{ order.client }}
@@ -90,16 +68,16 @@
               <span
                 class="inline-block py-1 px-3 rounded-full text-xs font-medium bg-green-100 text-green-600"
                 [ngClass]="{
-                  'bg-green-100 text-green-700': order.status === 'Pago',
-                  'bg-yellow-100 text-yellow-700': order.status === 'Pendente',
-                  'bg-red-100 text-red-700': order.status === 'Cancelado'
+                  'bg-green-100 text-green-700': order.status === 'PAID',
+                  'bg-yellow-100 text-yellow-700': order.status === 'PENDING',
+                  'bg-red-100 text-red-700': order.status === 'CANCELED'
                 }"
               >
                 {{ order.status }}
               </span>
             </td>
           </tr>
-        } -->
+        }
       </tbody>
     </table>
   </div>

@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { tap } from 'rxjs';
 
-import { ApiMockService } from '../../core/services/api-mock.service';
-import { StorageService } from '../../core/services/storage.service';
+import { AuthMockService } from './auth-mock.service';
+import { StorageService } from '../storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   constructor(
-    private apiMockService: ApiMockService,
+    private authMockService: AuthMockService,
     private storageService: StorageService
   ) {}
 
   login(email: string, password: string) {
-    return this.apiMockService.login(email, password).pipe(
+    return this.authMockService.login(email, password).pipe(
       tap((res) => {
         this.storageService.setToken(res.token);
         this.storageService.setUserEmail(email);
@@ -23,15 +23,15 @@ export class AuthService {
   }
 
   createPassword(email: string, code: string, newPassword: string) {
-    return this.apiMockService.createPassword(email, code, newPassword);
+    return this.authMockService.createPassword(email, code, newPassword);
   }
   
   requestPasswordReset(email: string) {
-    return this.apiMockService.requestPasswordReset(email);
+    return this.authMockService.requestPasswordReset(email);
   }
 
   confirmPasswordReset(email: string, code: string, newPassword: string) {
-    return this.apiMockService.confirmPasswordReset(email, code, newPassword);
+    return this.authMockService.confirmPasswordReset(email, code, newPassword);
   }
 
   logout() {

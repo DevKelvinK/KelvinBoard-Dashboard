@@ -1,9 +1,20 @@
-<div class="flex gap-5 py-6 px-7 md:px-4 xl:px-7 rounded-[20px] bg-white shadow">
-  <div class="flex items-center justify-center rounded-full w-16 h-16 md:w-14 md:h-14 xl:w-16 xl:h-16 bg-primary-gradient">
-    <i class="{{ iconClass }} text-2xl font-medium text-white"></i>
-  </div>
+<div 
+  class="flex gap-5 py-6 px-7 md:px-4 xl:px-7 rounded-[20px] bg-white shadow"
+>
+  @if (isLoading) {
+    <div class="animate-pulse size-16 md:size-14 xl:size-16 rounded-full bg-gray-200"></div>
+  }@else {
+    <div class="flex items-center justify-center rounded-full size-16 md:size-14 xl:size-16 bg-primary-gradient">
+      <i class="{{ iconClass }} text-2xl font-medium text-white"></i>
+    </div>
+  }
   <div class="flex flex-col justify-center">
-    <span class="text-colorGray-600 font-medium">{{ cardTitle }}</span>
-    <span class="text-lg font-bold text-secondary mt-1"> {{ cardValue }}</span>
+    @if (isLoading) {
+      <span class="animate-pulse bg-gray-200 rounded-lg w-28 h-5"></span>
+      <span class="animate-pulse bg-gray-200 rounded-lg w-16 h-6 mt-2"></span>
+    }@else {
+      <span class="text-colorGray-600 font-medium">{{ cardTitle }}</span>
+      <span class="text-lg font-bold text-secondary mt-1"> {{ cardValue }}</span>
+    }
   </div>
 </div>

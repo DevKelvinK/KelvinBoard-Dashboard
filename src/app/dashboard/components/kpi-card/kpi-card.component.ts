@@ -11,4 +11,5 @@ export class KpiCardComponent {
   @Input() cardTitle: string = '';
   @Input() cardValue: string = '';
   @Input() iconClass: string = '';
+  @Input() isLoading: boolean = false;
 }

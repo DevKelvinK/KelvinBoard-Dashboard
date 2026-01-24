@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 
 interface LoginForm {
