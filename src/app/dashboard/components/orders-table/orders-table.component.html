@@ -1,31 +1,36 @@
-<section class="bg-white shadow rounded-xl p-4">
-  <div
-    class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2"
-  >
+<section class="flex flex-col p-4 h-full min-h-0 bg-white shadow rounded-xl">
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
     <div>
       <h2 class="text-lg font-semibold text-gray-700">Pedidos</h2>
+      
       <span class="flex items-center gap-1 pl-1 text-sm text-colorGray-600">
-        @if (orders.length > 0) {
-          <i class="ph-fill ph-check-circle text-base text-green-400"></i>
+        @if (isLoading) {
+          <div class="animate-pulse size-4 rounded-full bg-gray-200 mt-2"></div>
+          <span class="animate-pulse block bg-gray-200 rounded-lg w-48 h-4 mt-2"></span>
+        }@else {
+          @if (orders.length > 0) {
+            <i class="ph-fill ph-check-circle text-base text-green-400"></i>
           } @else {
             <i class="ph-fill ph-x-circle text-base text-red-400"></i>
+          }
+          {{ orders.length }} recebido{{ (orders.length > 1) ? "s" : "" }} {{ (period == 7) ? "essa semana" : "esse mês" }}
         }
-        <span>{{ orders.length }} recebido{{ (orders.length > 1) ? "s" : "" }} {{ (period == 7) ? "essa semana" : "esse mês" }}</span>
       </span>
     </div>
 
     <!-- [control]="orderTableControl" -->
     <app-base-input
-      formControlName="search"
       type="text"
       placeholder="Buscar cliente..."
+      formControlName="search"
+      sizePY="py-2"
       (input)="search.emit($any($event.target).value)"
     >
       <i class="ph ph-magnifying-glass"></i>
     </app-base-input>
   </div>
 
-  <div class="overflow-x-auto">
+  <div class="flex-1 min-h-0 max-h-96 overflow-auto">
     <table class="min-w-full divide-y divide-colorGray-600/30">
       <thead>
         <tr>
@@ -40,7 +45,8 @@
             Cliente
           </th>
           <th
-            class="pl-2 py-2 text-left text-sm font-medium text-colorGray-600 uppercase tracking-wide"
+            class="cursor-pointer pl-2 py-2 text-left text-sm font-medium text-colorGray-600 uppercase tracking-wide hover:underline hover:text-secondary"
+            (click)="onSortClick()"
           >
             Valor
           </th>
@@ -53,30 +59,81 @@
       </thead>
 
       <tbody class="divide-y divide-colorGray-600/30">
-        @for (order of orders; track order.id) { 
-          <tr class="hover:bg-colorGray100/60">
-            <td class="px-4 py-3 text-sm text-colorGray600">
-              {{ order.date.toLocaleDateString('pt-BR') }}
-            </td>
-            <td class="px-4 py-3 text-sm text-colorGray600">
-              {{ order.client }}
-            </td>
-            <td class="px-4 py-3 text-sm font-medium text-colorGray700">
-              {{ order.value | currency:'BRL' }}
-            </td>
-            <td class="pl-3 pr-4 py-3 text-sm">
-              <span
-                class="inline-block py-1 px-3 rounded-full text-xs font-medium bg-green-100 text-green-600"
-                [ngClass]="{
-                  'bg-green-100 text-green-700': order.status === 'PAID',
-                  'bg-yellow-100 text-yellow-700': order.status === 'PENDING',
-                  'bg-red-100 text-red-700': order.status === 'CANCELED'
-                }"
-              >
-                {{ order.status }}
-              </span>
-            </td>
-          </tr>
+        @if (isLoading) {
+          @for (_ of skeletonRows; track $index) {
+            <tr class="animate-pulse hover:bg-colorGray100/60">
+              <td class="px-3 py-3 min-w-40 grow text-sm text-colorGray600">
+                <div class="flex items-center">
+                  <span class="block bg-gray-200 rounded-lg w-6 h-1 mr-[2px] mt-2"></span> / 
+                  <span class="block bg-gray-200 rounded-lg w-6 h-1 mx-[2px] mt-2"></span> / 
+                  <span class="block bg-gray-200 rounded-lg w-6 h-1 mx-[2px] mt-2"></span>
+                </div>
+              </td>
+              <td class="px-3 py-3 min-w-40 grow text-sm text-colorGray600">
+                <div class="flex items-center gap-2">
+                  <div class="size-8 rounded-full bg-gray-200"></div>
+                  <span class="block bg-gray-200 rounded-md w-40 h-4 mr-[2px]"></span>
+                </div>
+              </td>
+              <td class="px-3 py-3 min-w-40 grow text-sm font-medium text-colorGray700">
+                <span class="animate-pulse block bg-gray-200 rounded-md w-16 h-4 mr-[2px] mt-2"></span>
+              </td>
+              <td class="px-3 py-3 min-w-40 grow text-sm">
+                <span class="animate-pulse block bg-gray-200 rounded-full w-20 h-5 mr-[2px] mt-2"></span>
+              </td>
+            </tr>
+          }
+        }@else {
+          @for (order of orders; track order.id) { 
+            <tr class="hover:bg-colorGray100/60">
+              <td class="px-3 py-3 min-w-40 grow text-sm text-colorGray600">
+                @if (isLoading) {
+                  <div class="flex items-center">
+                    <span class="animate-pulse block bg-gray-200 rounded-lg w-6 h-1 mr-[2px] mt-2"></span> / 
+                    <span class="animate-pulse block bg-gray-200 rounded-lg w-6 h-1 mx-[2px] mt-2"></span> / 
+                    <span class="animate-pulse block bg-gray-200 rounded-lg w-6 h-1 mx-[2px] mt-2"></span>
+                  </div>
+                }@else {
+                  {{ order.date.toLocaleDateString('pt-BR') }}
+                }
+              </td>
+              <td class="px-3 py-3 min-w-40 grow text-sm text-colorGray600">
+                <div class="flex items-center gap-2">
+                  @if (isLoading) {
+                    <div class="animate-pulse size-8 rounded-full bg-gray-200"></div>
+                    <span class="animate-pulse block bg-gray-200 rounded-md w-40 h-4 mr-[2px]"></span>
+                  }@else {
+                    <img [src]="'/assets/images/' + order.avatar + '.png'" class="size-8" />
+                    <span>{{ order.client }}</span>
+                  }
+                </div>
+              </td>
+              <td class="px-3 py-3 min-w-40 grow text-sm font-medium text-colorGray700">
+                @if (isLoading) {
+                  <span class="animate-pulse block bg-gray-200 rounded-md w-16 h-4 mr-[2px] mt-2"></span>
+                }@else {
+                {{ order.value | currency:'BRL' }}
+                }
+              </td>
+              <td class="px-3 py-3 min-w-40 grow text-sm">
+                @if (isLoading) {
+                  <span class="animate-pulse block bg-gray-200 rounded-full w-20 h-5 mr-[2px] mt-2"></span>
+                }@else {
+                  <span
+                    class="inline-block py-1 px-3 rounded-full text-xs font-medium"
+                    [ngClass]="{
+                      'bg-green-100 text-green-700': order.status === 'PAID',
+                      'bg-yellow-100 text-yellow-700': order.status === 'PENDING',
+                      'bg-red-100 text-red-700': order.status === 'CANCELED',
+                      'bg-gray-100 text-gray-700': order.status === 'REFUNDED'
+                    }"
+                  >
+                    {{ ORDER_STATUS_LABEL[order.status] }}
+                  </span>
+                }
+              </td>
+            </tr>
+          }
         }
       </tbody>
     </table>

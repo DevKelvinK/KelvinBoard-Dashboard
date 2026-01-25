@@ -25,39 +25,37 @@ export class DashboardComponent {
     private ordersService: OrdersService,
     private toastService: ToastService,
   ) {}
-
-  ngOnInit() {
-    this.applyFilters();
-  }
-
+  
   // Abrir e fechar o sidebar
   isMenuOpen: boolean = false;
   closeMenu() {
     this.isMenuOpen = false;
   }
 
-  calculateKpis(orders: Order[]) {
-    const revenue = orders.reduce((acc, order) => acc + order.value, 0);
-    const ordersCount = orders.length;
-    const avgTicket = revenue / ordersCount;
+  ngOnInit() {
+    this.loadOrders();
+  }
 
-    return { revenue, ordersCount, avgTicket };
+  PeriodChange(period: 7 | 30) {
+    this.period = period;
+
+    this.loadOrders();
   }
 
   // Atualizar os dados do dashboard com base no período selecionado
   period: 7 | 30 = 7;
-  orders: Order[] = [];
-  kpis: Kpis = { revenue: 0, ordersCount: 0, avgTicket: 0 };
-  isLoading = false;
-  applyFilters() {
+  allOrders: Order[] = [];
+  isLoading:boolean = false;
+
+  loadOrders() {
     this.isLoading = true;
 
     this.ordersService.getOrders(this.period)
     .pipe(finalize(() => {this.isLoading = false;}))
     .subscribe({
-      next: (filteredOrders) => {
-        this.orders = filteredOrders;
-        this.kpis = this.calculateKpis(filteredOrders);
+      next: (ordersFromSelectedPeriod) => {
+        this.allOrders = ordersFromSelectedPeriod
+        this.applyUiFilters()
       },
       error: (err) => {
         this.toastService.error(err.message);
@@ -65,17 +63,53 @@ export class DashboardComponent {
     });
   }
 
-  PeriodChange(period: 7 | 30) {
-    this.period = period;
+  search: string = ''
+  sort: 'asc' | 'desc' | null = null;
+  filteredOrders: Order[] = [];
+  kpis: Kpis = { revenue: 0, ordersCount: 0, avgTicket: 0 };
 
-    this.applyFilters();
+  applyUiFilters() {
+    let filtered = [...this.allOrders]
+
+    if (this.search) {
+      filtered = filtered.filter(order => order.client.toLocaleLowerCase().includes(this.search.toLocaleLowerCase()))
+    }
+
+    if (this.sort) {
+      filtered.sort((a, b) =>
+        (this.sort === 'asc') 
+          ? a.value - b.value
+          : b.value - a.value    
+      )
+    }
+
+    this.filteredOrders = filtered
+    this.kpis = this.calculateKpis(filtered);
+  }
+
+  calculateKpis(ordersFromSelectedPeriod: Order[]) {
+    const revenue = ordersFromSelectedPeriod.reduce((acc, order) => acc + order.value, 0);
+    const ordersCount = ordersFromSelectedPeriod.length;
+    const avgTicket = revenue / ordersCount;
+
+    return { revenue, ordersCount, avgTicket };
+  }
+
+  onSearch(searchText: string) {
+    this.search = searchText
+    this.applyUiFilters();
+  }
+
+  onSortToggle() {
+    this.sort = this.sort === 'asc' ? 'desc' : 'asc';
+    this.applyUiFilters();
   }
 
   // Fazer testes
   test() {
     this.ordersService.getOrders(this.period).subscribe({
       next: (orders) => {
-        this.orders;
+        this.allOrders;
         this.toastService.success(`Tem: ${orders.length} pedidos.`);
       },
       error: (err) => {},

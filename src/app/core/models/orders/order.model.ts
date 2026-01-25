@@ -4,6 +4,7 @@ export interface Order {
   id: number;
   date: Date;
   client: string;
+  avatar: string;
   value: number;
   status: OrderStatus;
 }
