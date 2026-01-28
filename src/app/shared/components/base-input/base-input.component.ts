@@ -32,6 +32,7 @@ export class BaseInputComponent implements ControlValueAccessor {
   @Input() control?: FormControl | null;
   @Input() readonly: boolean = false;
   @Input() sizePY: string = 'py-[14px]';
+  @Input() isLoading: boolean = false
 
   value: string = '';
   onChange: (value: any) => void = () => {};

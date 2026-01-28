@@ -21,7 +21,12 @@ export class AuthGuardService implements CanMatch {
       return true;
     }
 
-    this.toastService.error('Você precisa estar logado para acessar essa página');
-    return this.router.createUrlTree(['/login']);
+    this.toastService.error('Você precisa estar logado para acessar o Dashboard');
+    return this.router.createUrlTree(
+      ['/error'],
+      {
+        queryParams: {code: 403}
+      }
+    )
   }
 }

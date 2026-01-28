@@ -28,6 +28,7 @@ type PasswordStrength = 'weak' | 'medium' | 'strong' | 'veryStrong';
 export class CreatePasswordComponent {
   createPasswordForm: FormGroup<CreatePasswordForm>;
   passwordStrengthLevel: PasswordStrength = 'weak';
+
   constructor(
     private router: Router,
     private AuthService: AuthService,
@@ -156,9 +157,8 @@ export class CreatePasswordComponent {
         if (err.field === 'email') {
           this.emailControl.setErrors({ notFound: true });
         } 
-        this.toastService.error(err.message);
         this.errorButton = true;
-        this.emailControl.markAsTouched();
+        this.toastService.error(err.message);
       }
     });
   }

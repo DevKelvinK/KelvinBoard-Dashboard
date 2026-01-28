@@ -57,10 +57,17 @@
         </tr>
       </thead>
 
-      <tbody class="divide-y divide-colorGray-600/30">
-        @if (isLoading) {
+      <tbody class="relative divide-y divide-colorGray-600/30">
+        @if (isLoading || !orders.length) {
+          @if (!orders.length && !isLoading) {
+            <div class="absolute inset-0 z-50 flex justify-center items-center">
+              <span class="text-white font-bold py-3 px-12 rounded-2xl bg-secondary/50">Sem dados no período</span>
+            </div>
+          }
           @for (_ of skeletonRows; track $index) {
-            <tr class="animate-pulse hover:bg-colorGray100/60">
+            <tr class="hover:bg-colorGray100/60"
+              [class.animate-pulse]="isLoading"
+            >
               <td class="px-3 py-3 min-w-40 grow text-sm text-colorGray600">
                 <div class="flex items-center">
                   <span class="block bg-gray-200 rounded-lg w-6 h-1 mr-[2px] mt-2"></span> / 
@@ -75,10 +82,10 @@
                 </div>
               </td>
               <td class="px-3 py-3 min-w-40 grow text-sm font-medium text-colorGray700">
-                <span class="animate-pulse block bg-gray-200 rounded-md w-16 h-4 mr-[2px] mt-2"></span>
+                <span class="block bg-gray-200 rounded-md w-16 h-4 mr-[2px] mt-2"></span>
               </td>
               <td class="px-3 py-3 min-w-40 grow text-sm">
-                <span class="animate-pulse block bg-gray-200 rounded-full w-20 h-5 mr-[2px] mt-2"></span>
+                <span class="block bg-gray-200 rounded-full w-20 h-5 mr-[2px] mt-2"></span>
               </td>
             </tr>
           }

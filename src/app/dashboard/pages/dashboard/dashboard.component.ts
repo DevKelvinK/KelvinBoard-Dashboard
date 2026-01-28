@@ -51,9 +51,13 @@ export class DashboardComponent {
   period: 7 | 30 = 7;
   allOrders: Order[] = [];
   isLoading:boolean = false;
+  hasError = false;
+  errorMessage = '';
 
   loadOrders() {
     this.isLoading = true;
+    this.hasError = false;
+    this.errorMessage = '';
 
     this.ordersService.getOrders(this.period)
     .pipe(finalize(() => {this.isLoading = false;}))
@@ -65,6 +69,8 @@ export class DashboardComponent {
       },
       error: (err) => {
         this.toastService.error(err.message);
+        this.hasError = true;
+        this.errorMessage = err?.message || 'Não foi possível carregar os dados.';
       },
     });
   }
@@ -106,6 +112,8 @@ export class DashboardComponent {
   // Lógica para Gráfico
   chartData: ChartData = { days: [], revenue: [] };
   buildChartData(allOrders: Order[]) {
+    if (!allOrders.length) return;
+
     const arrDays: string[] = [];
     const arrRevenue: number[] = []
 
@@ -144,6 +152,10 @@ export class DashboardComponent {
   onSortToggle() {
     this.sort = this.sort === 'asc' ? 'desc' : 'asc';
     this.applyUiFilters();
+  }
+
+  retry() {
+    this.loadOrders();
   }
 
   logout() {

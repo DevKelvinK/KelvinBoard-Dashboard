@@ -15,7 +15,12 @@
       </div>
     </div>
   } @else { 
-    <div class="h-64 w-full rounded-lg">
+    <div class="relative inset-0  flex items-center justify-center h-64 w-full rounded-lg">
+      @if (!chartData.days.length || !chartData.revenue.length) {
+        <div class="absolute py-3 px-12 rounded-2xl bg-secondary/50">
+          <span class="text-white font-bold">Sem dados no período</span>
+        </div>
+      }
       <canvas 
         class="w-full h-full pb-2 px-2 bg-white"
         baseChart 

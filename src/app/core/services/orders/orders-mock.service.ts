@@ -177,8 +177,9 @@ export class OrdersMockService {
 
     const filteredOrders = this.ordersData.filter(order => order.date >= startDate && order.date <= dateNow)
 
-    if (this.ordersData.length < 1) {
-      return this.simulateError({message: 'Nenhum pedido encontrado nesse período'})
+    // Simulação de erro que poderia vir do back-end
+    if (Math.random() < 0.15) {
+      return this.simulateError({ message: 'Não foi possível carregar os pedidos. Tente novamente.' });
     }
 
     return of(filteredOrders).pipe(delay(this.ramDelay()))

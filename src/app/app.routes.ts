@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 
 export const routes: Routes = [
   {
@@ -13,4 +14,12 @@ export const routes: Routes = [
       import('./dashboard/dashboard.module')
         .then(m => m.DashboardModule),
   },
+  {  
+    path: 'error',
+    component: NotFoundComponent
+  },
+  {
+    path: '**',
+    redirectTo: '/error'
+  }
 ];

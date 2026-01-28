@@ -74,9 +74,8 @@ export class LoginComponent {
         if (err.field === 'email') {
           this.emailControl.setErrors({ notFound: true });
         } 
-        this.toastService.error(err.message);
         this.errorButton = true;
-        this.emailControl.markAsTouched();
+        this.toastService.error(err.message);
       }
     })
   }

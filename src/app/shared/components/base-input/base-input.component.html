@@ -10,6 +10,7 @@
         (input)="onInput($event)"
         (blur)="onTouched()"
         [readonly]="readonly"
+        [disabled]="isLoading"
         class="w-full {{ sizePY }} pl-9 pr-2 rounded-[15px] border outline-none hover:outline-2 hover:outline-secondary focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
       />
       <div class="absolute inset-0 flex items-center w-max pl-3 text-xl text-secondary">

@@ -64,96 +64,120 @@
     </button>
   </aside>
 
-  <div class="flex-1 flex flex-col gap-6 p-6 w-full min-h-0">
-    <!-- Header -->
-    <header class="flex flex-col gap-9 sm:gap-6 md:justify-between">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-6">
-          <button
-            class="group relative lg:hidden py-1 px-2 rounded-lg text-secondary outline-none hover:bg-colorGray-600/40 focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
-            [disabled]="isMenuOpen"
-            (click)="isMenuOpen = true"
-          >
-            <i
-              class="ph ph-list text-2xl font-medium transition-transform duration-500 group-hover:translate-x-1 group-hover:opacity-0 group-focus:translate-x-1 group-focus:opacity-0"
-            >
-            </i>
-            <i
-              class="ph ph-arrow-fat-lines-right text-2xl font-medium absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-500"
-            >
-            </i>
-          </button>
+  <!-- Botão menu para abrir aside -->
+  <div class="absolute top-[22px] left-2">
+    <button
+      class="group relative lg:hidden py-1 px-2 rounded-lg text-secondary outline-none hover:bg-colorGray-600/40 focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+      [disabled]="isMenuOpen"
+      (click)="isMenuOpen = true"
+    >
+      <i
+        class="ph ph-list text-2xl font-medium transition-transform duration-500 group-hover:translate-x-1 group-hover:opacity-0 group-focus:translate-x-1 group-focus:opacity-0"
+      >
+      </i>
+      <i
+        class="ph ph-arrow-fat-lines-right text-2xl font-medium absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-500"
+      >
+      </i>
+    </button>
+  </div>
 
-          <span class="text-sm text-colorGray-600 cursor-default"
-            >pages <span class="text-secondary">/ Dashboard</span></span
+  @if (hasError) {
+    <div class="flex flex-col items-center justify-center gap-6 w-full rounded-2xl shadow p-6 bg-white min-h-screen">
+      <div class="text-center">
+        <h2 class="text-lg font-semibold text-gray-800 mb-1">
+          Não foi possível carregar os dados
+        </h2>
+  
+        <p class="text-sm text-gray-500 text-center max-w-md">
+          {{ errorMessage }}
+        </p>
+      </div>
+
+      <button
+        (click)="retry()"
+        class="px-5 py-2 rounded-xl bg-primary text-white font-semibold hover:bg-secondary outline-none focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+      >
+        Tentar novamente
+      </button>
+    </div>
+  } @else {
+    <div class="flex-1 flex flex-col gap-6 p-6 w-full min-h-0">
+      <!-- Header -->
+      <header class="flex flex-col gap-9 sm:gap-6 md:justify-between">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-6 ml-6 lg:ml-0">
+            <span class="text-sm text-colorGray-600 cursor-default"
+              >pages <span class="text-secondary">/ Dashboard</span></span
+            >
+          </div>
+  
+          <button
+            class="lg:hidden group flex items-center gap-2 py-1 px-2 my-auto rounded-lg self-start text-sm text-colorGray-600 outline-none hover:text-secondary focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
+            (click)="logout()"
           >
+            <i class="ph ph-sign-out text-base"></i>
+            <span class="group-hover:underline">Logout</span>
+          </button>
         </div>
 
-        <button
-          class="lg:hidden group flex items-center gap-2 py-1 px-2 my-auto rounded-lg self-start text-sm text-colorGray-600 outline-none hover:text-secondary focus:outline-2 focus:outline-secondary duration-300 ease-in-out"
-          (click)="logout()"
-        >
-          <i class="ph ph-sign-out text-base"></i>
-          <span class="group-hover:underline">Logout</span>
-        </button>
-      </div>
+        <div class="flex items-center justify-end sm:justify-between gap-2">
+          <h1 class="hidden sm:flex text-4xl font-bold font-montse text-gray-800">
+            Bem vindo(a)!
+          </h1>
 
-      <div class="flex items-center justify-end sm:justify-between gap-2">
-        <h1 class="hidden sm:flex text-4xl font-bold font-montse text-gray-800">
-          Bem vindo(a)!
-        </h1>
+          <app-period-filter
+            [isLoading]="isLoading"
+            [value]="period"
+            (valueChange)="PeriodChange($event)"
+          ></app-period-filter>
+        </div>
+      </header>
 
-        <app-period-filter
+      <!-- KPIs -->
+      <section class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <app-kpi-card
+          cardTitle="Receita"
+          cardValue="R$ {{ kpis.revenue.toFixed(2).replace('.', ',') }}"
+          iconClass="ph ph-currency-dollar"
           [isLoading]="isLoading"
-          [value]="period"
-          (valueChange)="PeriodChange($event)"
-        ></app-period-filter>
-      </div>
-    </header>
+        >
+        </app-kpi-card>
 
-    <!-- KPIs -->
-    <section class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      <app-kpi-card
-        cardTitle="Receita"
-        cardValue="R$ {{ kpis.revenue.toFixed(2).replace('.', ',') }}"
-        iconClass="ph ph-currency-dollar"
+        <app-kpi-card
+          cardTitle="Pedidos"
+          cardValue="{{ kpis.ordersCount }}"
+          iconClass="ph ph-list-checks "
+          [isLoading]="isLoading"
+        >
+        </app-kpi-card>
+
+        <app-kpi-card
+          cardTitle="Ticket Médio"
+          cardValue="R$ {{ kpis.avgTicket.toFixed(2).replace('.', ',') }}"
+          iconClass="ph ph-chart-line-up"
+          [isLoading]="isLoading"
+        >
+        </app-kpi-card>
+      </section>
+
+      <!-- Gráfico de linha -->
+      <app-chart
+        [chartData]="chartData"
         [isLoading]="isLoading"
       >
-      </app-kpi-card>
+      </app-chart>
 
-      <app-kpi-card
-        cardTitle="Pedidos"
-        cardValue="{{ kpis.ordersCount }}"
-        iconClass="ph ph-list-checks "
+      <!-- Tabela de pedidos -->
+      <app-orders-table
+        [orders]="filteredOrders"
+        [period]="period"
         [isLoading]="isLoading"
+        class="flex-1 min-h-0"
+        (search)="onSearch($event)"
+        (sort)="onSortToggle()"
       >
-      </app-kpi-card>
-
-      <app-kpi-card
-        cardTitle="Ticket Médio"
-        cardValue="R$ {{ kpis.avgTicket.toFixed(2).replace('.', ',') }}"
-        iconClass="ph ph-chart-line-up"
-        [isLoading]="isLoading"
-      >
-      </app-kpi-card>
-    </section>
-
-    <!-- Gráfico de linha -->
-    <app-chart
-      [chartData]="chartData"
-      [isLoading]="isLoading"
-    >
-    </app-chart>
-
-    <!-- Tabela de pedidos -->
-    <app-orders-table
-      [orders]="filteredOrders"
-      [period]="period"
-      [isLoading]="isLoading"
-      class="flex-1 min-h-0"
-      (search)="onSearch($event)"
-      (sort)="onSortToggle()"
-    >
-    </app-orders-table>
-  </div>
+      </app-orders-table>
+    </div>
+  }
 </main>

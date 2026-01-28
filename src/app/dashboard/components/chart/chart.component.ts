@@ -20,7 +20,7 @@ interface ChartData {
 })
 export class ChartComponent {
   @Input() chartData!: ChartData;
-  @Input() isLoading: boolean = false
+  @Input() isLoading: boolean = false;
 
   public lineChartData?: ChartConfiguration<'line'>['data'];
   public lineChartType?: ChartType = 'line';

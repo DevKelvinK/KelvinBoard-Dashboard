@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./button.component.css']
 })
 export class ButtonComponent {
-  @Input() loading: boolean = false
+  @Input() isLoading: boolean = false
+  @Input() loadingMessage: string = 'Carregando...'
   @Input() errorButton: boolean = false
 }
