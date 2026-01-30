@@ -1,6 +1,32 @@
-# Teste Técnico – Front-End (Angular)
+# KelvinBoard Dashboard — Teste Técnico (Angular)
 
-Projeto desenvolvido como parte do processo seletivo para **vaga de Estágio Front-End**, conforme especificações do desafio técnico.
+Projeto desenvolvido como parte de um **teste técnico para vaga de Estágio Front-End**, com foco em **fluxo de autenticação completo** e **dashboard com KPIs, gráfico e tabela**.
+
+🔗 **Deploy (GitHub Pages):**
+https://devkelvink.github.io/KelvinBoard/
+
+---
+
+## ✨ Funcionalidades
+
+### 🔐 Autenticação
+- Login com validações e mensagens por campo
+- Criar senha (primeiro acesso)
+- Recuperar senha (2 passos)
+- Proteção de rotas com Auth Guard
+- Token mock salvo no `localStorage`
+
+### 📊 Dashboard
+- KPIs: Receita, Pedidos e Ticket Médio
+- Filtro de período: **7 dias** e **30 dias**
+- Gráfico de linha: **receita por dia**
+- Tabela com:
+  - Busca por cliente
+  - Ordenação por valor
+- Estados bem tratados:
+  - Loading
+  - Sem dados
+  - Erro + botão “Tentar novamente”
 
 ---
 
@@ -8,12 +34,12 @@ Projeto desenvolvido como parte do processo seletivo para **vaga de Estágio Fro
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/DevKelvinK/KelvinBoard-Dashboard.git
+git clone https://github.com/DevKelvinK/KelvinBoard.git
 ```
 
 2. Entre na pasta do projeto:
 ```bash
-cd KelvinBoard-Dashboard
+cd KelvinBoard
 ```
 
 3. Instale as dependências:
@@ -35,9 +61,9 @@ http://localhost:4200
 
 ## 👤 Usuário de teste
 
-- **E-mail:** primeiroacesso@email.com
-- **Senha:** (criar no primeiro acesso)
-- **Código mock:** 123456
+- **E-mail:** primeiroacesso@email.com  
+- **Senha:** (criar no primeiro acesso)  
+- **Código mock:** 123456  
 
 > Obs: o login só funciona após a criação de senha (fluxo de primeiro acesso).
 
@@ -50,23 +76,24 @@ http://localhost:4200
 Regras simuladas:
 - Código expira em **2 minutos**
 - Reenvio permitido após **30 segundos**
-- Todas as respostas possuem delay simulado (800ms)
+- Respostas com delay simulado para representar chamadas de API
 
 ---
 
 ## 🧠 Decisões técnicas
 
-- Angular 18 com **Reactive Forms**
+- Angular 18 + TypeScript
+- **Reactive Forms** com validações e mensagens
 - Tipagem forte com **interfaces e DTOs**
 - Arquitetura modular:
   - `AuthModule`
   - `DashboardModule`
   - `CoreModule`
   - `SharedModule`
-- Autenticação e backend **100% mockados no front-end**
-- Uso de **guards** para proteção de rotas
-- Componentes reutilizáveis para inputs e validações
-- Foco em **UX**, mensagens claras e estados de loading/erro/vazio
+- Backend e autenticação **100% mockados no front-end**
+- Uso de **Guards** para proteção de rotas
+- Componentização e reutilização de UI (inputs/validações)
+- Foco em UX: estados de loading/erro/vazio e feedback claro
 
 ---
 
@@ -74,11 +101,11 @@ Regras simuladas:
 
 - Integração com backend real
 - Testes unitários (Jasmine/Karma)
-- Persistência real de usuários
 - Paginação na tabela do dashboard
-- Refresh token e interceptor global
+- Interceptor global + refresh token
 - Melhorias visuais e animações
 
 ---
 
-Desenvolvido por [**Kelvin Kesley**](https://www.linkedin.com/in/kelvin-kesley/).
+Desenvolvido por **Kelvin Kesley**  
+🔗 LinkedIn: https://www.linkedin.com/in/kelvin-kesley/

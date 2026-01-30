@@ -43,7 +43,9 @@
                   "maximumError": "4kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "/KelvinBoard/",
+              "deployUrl": "/KelvinBoard/"
             },
             "development": {
               "optimization": false,
